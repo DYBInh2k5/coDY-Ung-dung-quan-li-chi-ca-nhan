@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">coDY</string>
+    <string name="tasks">Công việc</string>
+    <string name="notes">Ghi chú</string>
+    <string name="habits">Thói quen</string>
+    <string name="expenses">Chi tiêu</string>
+    <string name="reminders">Nhắc nhở</string>
+</resources>
