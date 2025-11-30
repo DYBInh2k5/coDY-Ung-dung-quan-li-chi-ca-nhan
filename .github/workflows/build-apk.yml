@@ -1,0 +1,60 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --stacktrace
+      
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: coDY-debug-apk
+        path: app/build/outputs/apk/debug/app-debug.apk
+        
+    - name: Create Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        name: coDY v1.0.${{ github.run_number }}
+        body: |
+          🎉 coDY - Personal Manager App
+          
+          ✨ Tính năng:
+          - ✅ Quản lý công việc
+          - 📝 Ghi chú
+          - 💸 Chi tiêu
+          - 🔥 Thói quen
+          - ⏰ Nhắc nhở
+          
+          📱 Tải APK và cài đặt trên điện thoại Android của bạn!
+          
+          🔗 GitHub: https://github.com/DYBInh2k5/coDY-Ung-dung-quan-li-chi-ca-nhan
+        files: app/build/outputs/apk/debug/app-debug.apk
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
